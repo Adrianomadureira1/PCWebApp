@@ -1,14 +1,22 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using PCWebApp.Repository;
 using Microsoft.EntityFrameworkCore;
 using PCWebApp.Repository.Interfaces;
 using PCWebApp.Repository.Entity;
+using PCWebApp.Services;
+using PCWebApp.Services.Interface;
 using System.Reflection;
 using System.IO;
 using Swashbuckle.AspNetCore.Filters;
@@ -29,6 +37,8 @@ namespace PCWebApp
         {
             services.AddScoped<IColaboradorRepository<Colaborador>, ColaboradorRepository<Colaborador>>();
 
+            services.AddScoped<IColaboradorService, ColaboradorService>();
+
             services.AddEntityFrameworkNpgsql().AddDbContext<PCDbContext>(opt => 
             opt.UseNpgsql(Configuration.GetConnectionString("PCDbConnection")));
 
@@ -37,7 +47,9 @@ namespace PCWebApp
                     options.SuppressModelStateInvalidFilter = true;
                     options.SuppressMapClientErrors = true;
                 });
-            
+
+            services.AddAutoMapper(typeof(Startup));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Documentação da PCWebApp API", 
@@ -57,7 +69,9 @@ namespace PCWebApp
 
                 c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
             });
+
             services.AddSwaggerExamplesFromAssemblyOf<Startup>();
+            
             services.AddCors(options => 
             {
                 options.AddPolicy(name: "Origins",
