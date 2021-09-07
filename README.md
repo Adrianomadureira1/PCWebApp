@@ -38,3 +38,22 @@ Realizar o download do Visual Studio 2019 por meio deste [link](https://visualst
 dotnet build
 dotnet run environment=development
 ```
+
+<strong>Docker:</strong>
+
+Executar os seguintes comandos dotnet:
+```sh
+dotnet build
+dotnet publish
+```
+
+Executar os seguintes comandos docker:
+```sh
+docker build -t pcwebapp-image -f Dockerfile .
+docker run -it --rm --entrypoint "bash" -p 127.0.0.1:5000:80 pcwebapp-image
+```
+
+Dentro do docker container executar:
+```sh
+./PCWebApp
+```
