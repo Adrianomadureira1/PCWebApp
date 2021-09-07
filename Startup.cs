@@ -40,7 +40,7 @@ namespace PCWebApp
             services.AddScoped<IColaboradorService, ColaboradorService>();
 
             services.AddEntityFrameworkNpgsql().AddDbContext<PCDbContext>(opt => 
-            opt.UseNpgsql(Configuration.GetConnectionString("PCDbConnection")));
+            opt.UseNpgsql(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers()
                 .ConfigureApiBehaviorOptions(options => {
